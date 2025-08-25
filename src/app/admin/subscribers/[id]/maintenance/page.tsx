@@ -3,7 +3,6 @@ import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import AdminMainLayout from "@/components/layout/adminLayout";
 import Tabs from "../../../../../../tabs/tabs";
-import AddPointForm from "@/components/subscibers/sunSmiles/addPointForm";
 import { api_url } from "../../../../../../utils/apiCall";
 import { toast } from "sonner";
 import Loader from "../../../../../../loader/loader";
@@ -32,10 +31,9 @@ type MaintenanceBox = {
 
 export default function SubscriberSubscriberDeviceDetailsPage() {
   const { id } = useParams();
-
+  
   // Always call hooks first
-  const [showPointForm, setShowPointForm] = useState(false);
-  const [subscriber, setSubscriber] = useState<Subscriber | null>(null);
+  // const [subscriber, setSubscriber] = useState<Subscriber | null>(null);
   const [loading, setLoading] = useState(false);
 
   const maintenanceYears = [2025, 2026, 2027];
@@ -61,34 +59,35 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
   };
 
   // Create a stable fetchSubscriber that does nothing if id invalid
-  const fetchSubscriber = useCallback(async () => {
-    if (!id || Array.isArray(id)) return; // <-- early return inside the hook, safe!
+const fetchSubscriber = useCallback(async () => {
+  if (!id || Array.isArray(id)) return;
 
-    try {
-      setLoading(true);
-      const token = sessionStorage.getItem("token");
-      const res = await fetch(`${api_url}get/subscriber/by/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        cache: "no-store",
-      });
+  try {
+    setLoading(true);
+    const token = sessionStorage.getItem("token");
+    const res = await fetch(`${api_url}get/subscriber/by/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
-      const data: Subscriber = await res.json();
-      if (!res.ok) {
-        const errData = data as unknown as { message: string };
-        throw new Error(errData.message || "Failed to fetch subscriber");
-      }
-
-      setSubscriber(data);
-    } catch (err) {
-      const error = err as Error;
-      toast.error(error.message || "Failed to fetch subscriber");
-    } finally {
-      setLoading(false);
+    const data: Subscriber = await res.json();
+    if (!res.ok) {
+      const errData = data as unknown as { message: string };
+      throw new Error(errData.message || "Failed to fetch subscriber");
     }
-  }, [id]);
+
+    // setSubscriber(data);
+  } catch (err) {
+    const error = err as Error;
+    toast.error(error.message || "Failed to fetch subscriber");
+  } finally {
+    setLoading(false);
+  }
+}, [id]);
+
 
   useEffect(() => {
     fetchSubscriber();

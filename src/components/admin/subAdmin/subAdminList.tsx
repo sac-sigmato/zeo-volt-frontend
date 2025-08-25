@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { SearchCheckIcon } from "lucide-react";
 import { api_url } from "../../../../utils/apiCall";
@@ -17,7 +17,7 @@ export default function SubAdminUsersPage({
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const fetchSubAdmins = async () => {
+  const fetchSubAdmins = useCallback(async () => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem("token");
@@ -35,7 +35,6 @@ export default function SubAdminUsersPage({
         toast.error(data.message || "Failed to fetch users");
         return;
       }
-
       setUsers(data);
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -43,11 +42,11 @@ export default function SubAdminUsersPage({
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, status]);
 
   useEffect(() => {
     fetchSubAdmins();
-  }, [search, status, refreshKey]); // 👈 include refreshKey here
+  }, [fetchSubAdmins, refreshKey]); // ✅ now safe
 
   return (
     <div className="space-y-6">
@@ -81,10 +80,10 @@ export default function SubAdminUsersPage({
 
         {/* Table */}
         {loading ? (
-<div>
-                <Loader />
-  
-</div>        ) : (
+          <div>
+            <Loader />
+          </div>
+        ) : (
           <ManageUsersList users={users} refreshUsers={fetchSubAdmins} />
         )}
       </div>

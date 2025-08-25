@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Pencil, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import AdminMainLayout from "@/components/layout/adminLayout";
 import { api_url } from "../../../../utils/apiCall";
+
+type Task = {
+  _id?: string;
+  title?: string;
+  description?: string;
+};
+
 type TechPerson = {
   _id: string;
   name: string;
@@ -17,25 +24,24 @@ export default function TechPersons() {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [showTasksModal, setShowTasksModal] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<
-    (TechPerson & { tasks?: string[] }) | null
+    (TechPerson & { tasks?: Task[] }) | null
   >(null);
 
-  // Fetch tech persons list
   // Fetch tech persons list
   useEffect(() => {
     fetchTechPersons();
   }, []);
 
   const fetchTechPersons = async () => {
-   fetch(`${api_url}tech-persons`)
-     .then((res) => res.json())
-     .then((data) => {
-       setTechPersons(Array.isArray(data.techPersons) ? data.techPersons : []);
-     })
-     .catch((err) => {
-       console.error("Error fetching tech persons:", err);
-       setTechPersons([]); // Fallback to empty array on error
-     });
+    fetch(`${api_url}tech-persons`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTechPersons(Array.isArray(data.techPersons) ? data.techPersons : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching tech persons:", err);
+        setTechPersons([]);
+      });
   };
 
   // Handle form input
@@ -52,11 +58,10 @@ export default function TechPersons() {
       body: JSON.stringify(form),
     });
     if (res.ok) {
-      await fetchTechPersons(); // refetch from API
+      await fetchTechPersons();
       setShowModal(false);
       setForm({ name: "", email: "", phone: "" });
     }
-
   };
 
   return (
@@ -73,6 +78,7 @@ export default function TechPersons() {
             <Plus size={20} /> Add Tech Person
           </button>
         </div>
+
         {/* Table */}
         <div className="overflow-x-auto rounded-lg shadow bg-white">
           <table className="min-w-full divide-y divide-gray-200">
@@ -94,7 +100,7 @@ export default function TechPersons() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {techPersons.length === 0 ? (
-                <tr >
+                <tr>
                   <td
                     colSpan={4}
                     className="px-6 py-8 text-center text-gray-500 italic"
@@ -158,7 +164,7 @@ export default function TechPersons() {
               {Array.isArray(selectedPerson.tasks) &&
               selectedPerson.tasks.length > 0 ? (
                 <ul className="list-disc pl-5 text-gray-700 space-y-1">
-                  {selectedPerson.tasks.map((task: any, idx: number) => (
+                  {selectedPerson.tasks.map((task, idx) => (
                     <li key={task._id || idx}>
                       {task.title ? (
                         <>

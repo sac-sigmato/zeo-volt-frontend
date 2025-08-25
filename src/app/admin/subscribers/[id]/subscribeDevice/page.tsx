@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import AdminMainLayout from "@/components/layout/adminLayout";
 import { toast } from "sonner";
@@ -44,7 +44,8 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const fetchSubscriber = async () => {
+  // ✅ Wrap in useCallback so dependency array is safe
+  const fetchSubscriber = useCallback(async () => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem("token");
@@ -69,11 +70,11 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (id) fetchSubscriber();
-  }, [id]);
+  }, [id, fetchSubscriber]);
 
   const handleDocumentUpload = async () => {
     try {
@@ -83,7 +84,6 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
       formData.append("document", selectedFile);
       formData.append("subscriberId", subscriber?._id || "");
       formData.append("deviceId", selectedDevice.device._id);
-      console.log("api_url", api_url);
 
       const token = sessionStorage.getItem("token");
       const response = await fetch(
@@ -195,7 +195,7 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
                               <button
                                 onClick={() =>
                                   setSelectedDocument(
-                                    subscribedDevice.documentUrl
+                                    subscribedDevice.documentUrl ?? null
                                   )
                                 }
                                 className="text-blue-600 hover:text-blue-800"

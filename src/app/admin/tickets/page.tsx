@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Pencil, Plus } from "lucide-react";
 import AdminMainLayout from "@/components/layout/adminLayout";
 import { useRouter } from "next/navigation";
@@ -32,36 +32,38 @@ export default function TicketsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentTicket, setCurrentTicket] = useState<Ticket | null>(null);
 
-  const fetchTickets = async () => {
-    try {
-      setLoading(true);
-      const token = sessionStorage.getItem("token");
-      const res = await fetch(`${api_url}get/all/tickets`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ search }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-      setTickets(data);
-    } catch (err) {
-      const error = err as Error;
-      toast.error(error.message || "Failed to load tickets");
-    } finally {
-      setLoading(false);
-    }
-  };
+   const fetchTickets = useCallback(async () => {
+     try {
+       setLoading(true);
+       const token = sessionStorage.getItem("token");
+       const res = await fetch(`${api_url}get/all/tickets`, {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({ search }),
+       });
+       const data = await res.json();
+       if (!res.ok) throw new Error(data.message);
+       setTickets(data);
+     } catch (err) {
+       const error = err as Error;
+       toast.error(error.message || "Failed to load tickets");
+     } finally {
+       setLoading(false);
+     }
+   }, [search]);
 
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      fetchTickets();
-    }, 400);
+   useEffect(() => {
+     const delayDebounce = setTimeout(() => {
+       fetchTickets();
+     }, 400);
 
-    return () => clearTimeout(delayDebounce);
-  }, [search]);
+     return () => clearTimeout(delayDebounce);
+   }, [fetchTickets]);
+
+  
 
   return (
     <AdminMainLayout>

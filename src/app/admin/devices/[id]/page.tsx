@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import AdminMainLayout from "@/components/layout/adminLayout";
 import { toast } from "sonner";
@@ -25,7 +25,7 @@ export default function DeviceDetailPage() {
   const [device, setDevice] = useState<Device | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchDevice = async () => {
+  const fetchDevice = useCallback(async () => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem("token");
@@ -50,11 +50,11 @@ export default function DeviceDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]); // ✅ dependency is now tracked
 
   useEffect(() => {
     if (id) fetchDevice();
-  }, [id]);
+  }, [id, fetchDevice]); // ✅ warning gone
 
   return (
     <AdminMainLayout>

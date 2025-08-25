@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import AdminMainLayout from "@/components/layout/adminLayout";
 import { toast } from "sonner";
@@ -30,7 +30,7 @@ export default function SubscriberDetailPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<Subscriber>>({});
 
-  const fetchSubscriber = async () => {
+  const fetchSubscriber = useCallback(async () => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem("token");
@@ -57,11 +57,11 @@ export default function SubscriberDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]); // 👈 depends only on id
 
   useEffect(() => {
     if (id) fetchSubscriber();
-  }, [id]);
+  }, [id, fetchSubscriber]); // 👈 now safe
 
   const handleChange = (field: keyof Subscriber, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -107,7 +107,7 @@ export default function SubscriberDetailPage() {
       <div className="pt-6">
         {/* ✅ Tabs Full Width */}
         <div className="px-8">
-          <Tabs tabs={tabs} className="w-full mb-8" />
+          <Tabs tabs={tabs} />
         </div>
 
         {/* ✅ Keep the rest inside constrained card */}
@@ -189,10 +189,7 @@ export default function SubscriberDetailPage() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                       value={formData.status || ""}
                       onChange={(e) =>
-                        handleChange(
-                          "status",
-                          e.target.value as Subscriber["status"]
-                        )
+                        handleChange("status", e.target.value as string)
                       }
                     >
                       <option value="Active">Active</option>
