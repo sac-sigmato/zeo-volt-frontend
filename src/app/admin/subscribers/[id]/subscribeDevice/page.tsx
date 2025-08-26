@@ -63,6 +63,8 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
       }
 
       const data: Subscriber = await res.json();
+      console.log(data,"Subscriber data fetched successfully");
+      
       setSubscriber(data);
     } catch (err) {
       const error = err as Error;
@@ -170,52 +172,52 @@ export default function SubscriberSubscriberDeviceDetailsPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {subscriber.subscribedDevices.map((subscribedDevice) => (
-                        <tr
-                          key={subscribedDevice._id}
-                          className="hover:bg-gray-50"
-                        >
-                          <td className="px-4 py-2 whitespace-nowrap">
-                            {subscribedDevice.device.deviceId}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap">
-                            {subscribedDevice.device.deviceName}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap">
-                            {subscribedDevice.device.type}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap">
-                            {subscribedDevice.device.modelNumber || "-"}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap">
-                            {subscribedDevice.device.capacity} kW
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap">
-                            {subscribedDevice.documentUrl ? (
-                              <button
-                                onClick={() =>
-                                  setSelectedDocument(
-                                    subscribedDevice.documentUrl ?? null
-                                  )
-                                }
-                                className="text-blue-600 hover:text-blue-800"
-                              >
-                                View
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => {
-                                  setSelectedDevice(subscribedDevice);
-                                  setShowUploadModal(true);
-                                }}
-                                className="text-green-600 hover:text-green-800"
-                              >
-                                Add
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                      {subscriber.subscribedDevices.map((subscribedDevice) => {
+                        const d = subscribedDevice.device;
+                        return (
+                          <tr key={d._id} className="hover:bg-gray-50">
+                            <td className="px-4 py-2 whitespace-nowrap">
+                              {d.deviceId || "-"}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap">
+                              {d.deviceName || "-"}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap">
+                              {d.type || "-"}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap">
+                              {d.modelNumber || "-"}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap">
+                              {d.capacity ? `${d.capacity} kW` : "-"}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap">
+                              {subscribedDevice.documentUrl ? (
+                                <button
+                                  onClick={() =>
+                                    setSelectedDocument(
+                                      subscribedDevice.documentUrl ?? null
+                                    )
+                                  }
+                                  className="text-blue-600 hover:text-blue-800"
+                                >
+                                  View
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    setSelectedDevice(subscribedDevice);
+                                    setShowUploadModal(true);
+                                  }}
+                                  className="text-green-600 hover:text-green-800"
+                                >
+                                  Add
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
