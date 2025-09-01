@@ -7,15 +7,15 @@ import {
   ShieldCheck,
   UserSquare,
   Presentation,
-  User
+  User,
+  Table
 } from "lucide-react";
 
 const menuItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Devices", href: "/admin/devices", icon: Presentation },
   { label: "Subscribers", href: "/admin/subscribers", icon: UserCircle2 },
-  { label: "Tickets", href: "/admin/tickets", icon: Users2 },
-  // { label: "Settings", href: "/admin/settings", icon: Settings },
+  { label: "Tickets", href: "/admin/tickets", icon: Table },
   // Tech person management
   { label: "Tech Persons", href: "/admin/techPersons", icon: User },
   {
@@ -23,6 +23,7 @@ const menuItems = [
     href: "/admin/rolesManagament",
     icon: ShieldCheck,
   },
+  { label: "Referrals", href: "/admin/referrals", icon: Users2 },
   { label: "My Profile", href: "/admin/myProfile", icon: UserSquare },
 ];
 
