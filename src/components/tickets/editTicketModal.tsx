@@ -10,7 +10,8 @@ interface Props {
   ticket: {
     _id: string;
     ticketId: string;
-    subscriber: { name: string; phone: string };
+    subscriberName: string;
+    subscriberPhone: string;
     status: string;
   } | null;
   onUpdated: () => void;
@@ -61,7 +62,7 @@ export default function EditTicketModal({ isOpen, onClose, ticket, onUpdated }: 
           </div>
           <div>
             <div className="text-gray-500 font-medium">Subscriber</div>
-            <div className="text-gray-800">{ticket.subscriber.name} ({ticket.subscriber.phone})</div>
+            <div className="text-gray-800">{ticket.subscriberName} ({ticket.subscriberPhone})</div>
           </div>
           <div>
             <label className="block font-medium text-gray-600 mb-1">Status</label>

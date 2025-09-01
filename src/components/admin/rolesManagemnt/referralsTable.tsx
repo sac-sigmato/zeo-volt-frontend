@@ -39,40 +39,58 @@ const ReferralsTable: React.FC = () => {
         if (error) return <div>{error}</div>;
 
         return (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th style={{ border: "1px solid #ccc", padding: "8px" }}>ID</th>
-                <th style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  Name
-                </th>
-                <th style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  Email
-                </th>
-                <th style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  Referred By
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {referrals.map((referral) => (
-                <tr key={referral._id}>
-                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                    {referral._id}
-                  </td>
-                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                    {referral.name}
-                  </td>
-                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                    {referral.email}
-                  </td>
-                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                    {referral.referredByName}
-                  </td>
+          <div className="overflow-x-auto rounded-lg shadow bg-white">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Referred By
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-100">
+                {referrals.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-6 py-8 text-center text-gray-500 italic"
+                    >
+                      No referrals found.
+                    </td>
+                  </tr>
+                ) : (
+                  referrals.map((referral) => (
+                    <tr
+                      key={referral._id}
+                      className="hover:bg-gray-50 transition"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {referral._id}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {referral.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {referral.email}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {referral.referredByName}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         );
 };
 

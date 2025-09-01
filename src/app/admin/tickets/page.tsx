@@ -12,10 +12,8 @@ import EditTicketModal from "@/components/tickets/editTicketModal";
 interface Ticket {
   _id: string;
   ticketId: string;
-  subscriber: {
-    name: string;
-    phone: string;
-  };
+  subscriberName: string;
+  subscriberPhone: string;
   device: {
     deviceId: string;
     deviceName: string;
@@ -45,6 +43,8 @@ export default function TicketsPage() {
          body: JSON.stringify({ search }),
        });
        const data = await res.json();
+       console.log(data);
+
        if (!res.ok) throw new Error(data.message);
        setTickets(data);
      } catch (err) {
@@ -126,10 +126,10 @@ export default function TicketsPage() {
                         {t.ticketId}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {t.subscriber?.name}
+                        {t.subscriberName}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {t.subscriber?.phone}
+                        {t.subscriberPhone}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {t.device?.deviceId} - {t.device?.deviceName}
